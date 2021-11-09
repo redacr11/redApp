@@ -6,10 +6,10 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   image: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 30,
-    marginRight: 15,
+    marginRight: 10,
   },
   badgeContainer: {
     backgroundColor: "rgb(0,195,0)",
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
-    left: 50,
+    left: 45,
     top: 10,
   },
   badgeText: {
@@ -43,10 +43,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "grey",
-    fontSize: 16,
   },
 });
 
 export default styles;
-
-//! START AT 2:05:45
