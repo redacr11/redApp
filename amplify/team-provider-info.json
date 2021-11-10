@@ -14,6 +14,12 @@
     "categories": {
       "auth": {
         "redApp": {}
+      },
+      "function": {
+        "redAppPostConfirmation": {
+          "deploymentBucketName": "amplify-redapp-staging-110037-deployment",
+          "s3Key": "amplify-builds/redAppPostConfirmation-34507358777159322f47-build.zip"
+        }
       }
     }
   }
