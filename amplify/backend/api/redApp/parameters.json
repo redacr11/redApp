@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "redApp",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authredApp",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

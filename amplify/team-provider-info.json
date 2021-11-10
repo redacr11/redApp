@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-redapp-staging-110037-authRole",
+      "UnauthRoleArn": "arn:aws:iam::579984695306:role/amplify-redapp-staging-110037-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::579984695306:role/amplify-redapp-staging-110037-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-redapp-staging-110037-deployment",
+      "UnauthRoleName": "amplify-redapp-staging-110037-unauthRole",
+      "StackName": "amplify-redapp-staging-110037",
+      "StackId": "arn:aws:cloudformation:us-east-1:579984695306:stack/amplify-redapp-staging-110037/453b5900-414c-11ec-92d0-0ac444f76f3b",
+      "AmplifyAppId": "dnjx8q0iw9qwi"
+    },
+    "categories": {
+      "auth": {
+        "redApp": {}
+      }
+    }
+  }
+}
