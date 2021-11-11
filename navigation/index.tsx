@@ -3,11 +3,12 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
+  useNavigation,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
@@ -17,6 +18,7 @@ import {
   View,
   Image,
   useWindowDimensions,
+  Pressable,
 } from "react-native";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
@@ -25,9 +27,7 @@ import LinkingConfiguration from "./LinkingConfiguration";
 
 import ChatRoomScreen from "../screens/ChatRoomScreen";
 import HomeScreen from "../screens/HomeScreen";
-
-import { Entypo, Feather } from "@expo/vector-icons";
-import TabOneScreen from "../screens/HomeScreen";
+import UsersScreen from "../screens/UsersScreen";
 
 export default function Navigation({
   colorScheme,
@@ -67,6 +67,13 @@ function RootNavigator() {
         }}
       />
       <Stack.Screen
+        name="UsersScreen"
+        component={UsersScreen}
+        options={{
+          title: "Users",
+        }}
+      />
+      <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}
         options={{ title: "Oops!" }}
@@ -77,23 +84,30 @@ function RootNavigator() {
 
 const HomeHeader = (props) => {
   const { width } = useWindowDimensions();
+  const navigation = useNavigation();
   return (
     <View
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        backgroundColor: "pink",
+        backgroundColor: "lightgreen",
         width,
-        position: "absolute",
+        position: "relative",
+        left: -10,
         padding: 10,
         alignItems: "center",
+        overflow: "hidden",
       }}
     >
       <Image
         source={{
           uri: "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/elon.png",
         }}
-        style={{ width: 30, height: 30, borderRadius: 30 }}
+        style={{
+          width: 30,
+          height: 30,
+          borderRadius: 30,
+        }}
       />
       <Text
         style={{
@@ -111,12 +125,14 @@ const HomeHeader = (props) => {
         color="black"
         style={{ marginHorizontal: 10 }}
       />
-      <Feather
-        name="edit-2"
-        size={24}
-        color="black"
-        style={{ marginHorizontal: 10 }}
-      />
+      <Pressable onPress={() => navigation.navigate("UsersScreen")}>
+        <Feather
+          name="edit-2"
+          size={24}
+          color="black"
+          style={{ marginHorizontal: 10 }}
+        />
+      </Pressable>
     </View>
   );
 };
@@ -128,7 +144,7 @@ const ChatRoomHeader = (props) => {
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        // backgroundColor: "green",
+        backgroundColor: "green",
         position: "absolute",
         width: width - width / 20,
         left: width - width * 1.45,
