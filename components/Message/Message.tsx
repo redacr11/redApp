@@ -1,5 +1,8 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { DataStore } from "@aws-amplify/datastore";
+import { User } from "../../src/models";
+import Auth from "@aws-amplify/auth";
 
 const green = "rgb(0,195,0)";
 const orange = "rgb(247,152,98)";
@@ -7,7 +10,28 @@ const orange = "rgb(247,152,98)";
 const myID = "u1";
 
 const Message = ({ message }) => {
-  const isMe = message.user.id === myID;
+  const [user, setUser] = useState<User | undefined>();
+  const [isMe, setIsMe] = useState<boolean>(false);
+
+  useEffect(() => {
+    DataStore.query(User, message.userID).then(setUser);
+  }, []);
+
+  useEffect(() => {
+    const checkIfMe = async () => {
+      if (!user) {
+        return;
+      }
+      const authUser = await Auth.currentAuthenticatedUser();
+      setIsMe(user.id === authUser.attributes.sub);
+    };
+    checkIfMe();
+  }, [user]);
+
+  if (!user) {
+    return <ActivityIndicator />;
+  }
+
   return (
     <View
       style={[

@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View, Image, Pressable } from "react-native";
-import { useNavigation } from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/native";
 import styles from "./styles";
 import { DataStore, Auth } from "aws-amplify";
 import { ChatRoom, User, ChatRoomUser } from "../../src/models";
