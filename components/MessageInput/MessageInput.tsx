@@ -12,9 +12,11 @@ import { FontAwesome5, Entypo, AntDesign, Ionicons } from "@expo/vector-icons";
 import { DataStore } from "@aws-amplify/datastore";
 import { ChatRoom, Message } from "../../src/models";
 import Auth from "@aws-amplify/auth";
+import EmojiSelector from "react-native-emoji-selector";
 
 const MessageInput = ({ chatRoom }) => {
   const [message, setMessage] = useState("");
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
 
   const sendMessage = async () => {
     console.warn("sending: ", message);
@@ -29,6 +31,7 @@ const MessageInput = ({ chatRoom }) => {
 
     updateLastMessage(newMessage);
     setMessage("");
+    setIsEmojiPickerOpen(false);
   };
 
   const updateLastMessage = async (newMessage) => {
@@ -53,42 +56,62 @@ const MessageInput = ({ chatRoom }) => {
 
   return (
     <KeyboardAvoidingView
-      style={styles.root}
+      style={[styles.root, { height: isEmojiPickerOpen ? "50%" : "auto" }]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={100}
     >
-      <View style={styles.inputContainer}>
-        <FontAwesome5 name="smile" size={24} color="grey" style={styles.icon} />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Start typing..."
-          value={message}
-          onChangeText={setMessage}
-        />
-        <Entypo name="camera" size={22} color="grey" style={styles.icon} />
-        <FontAwesome5
-          name="microphone"
-          size={22}
-          color="grey"
-          style={styles.icon}
-        />
+      <View style={styles.row}>
+        <View style={styles.inputContainer}>
+          <Pressable onPress={() => setIsEmojiPickerOpen(!isEmojiPickerOpen)}>
+            <FontAwesome5
+              name="smile"
+              size={24}
+              color="grey"
+              style={styles.icon}
+            />
+          </Pressable>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Start typing..."
+            value={message}
+            onChangeText={setMessage}
+          />
+          <Entypo name="camera" size={22} color="grey" style={styles.icon} />
+          <FontAwesome5
+            name="microphone"
+            size={22}
+            color="grey"
+            style={styles.icon}
+          />
+        </View>
+        <Pressable onPress={onPress} style={styles.buttonContainer}>
+          {message ? (
+            <Ionicons name="send" size={16} color="white" />
+          ) : (
+            <AntDesign name="plus" size={22} color="white" />
+          )}
+        </Pressable>
       </View>
-      <Pressable onPress={onPress} style={styles.buttonContainer}>
-        {message ? (
-          <Ionicons name="send" size={16} color="white" />
-        ) : (
-          <AntDesign name="plus" size={22} color="white" />
-        )}
-      </Pressable>
+
+      {isEmojiPickerOpen && (
+        <EmojiSelector
+          onEmojiSelected={(emoji) =>
+            setMessage((currentMessage) => currentMessage + emoji)
+          }
+          columns={16}
+        />
+      )}
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    flexDirection: "row",
     padding: 10,
     marginBottom: 10,
+  },
+  row: {
+    flexDirection: "row",
   },
   inputContainer: {
     backgroundColor: "#f2f2f2",

@@ -32,7 +32,7 @@ const ChatRoomHeader = ({ id, children }) => {
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        backgroundColor: "green",
+        backgroundColor: "lightblue",
         position: "absolute",
         width: width - width / 20,
         left: width - width * 1.45,
