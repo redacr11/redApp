@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { DataStore } from "@aws-amplify/datastore";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  useWindowDimensions,
+} from "react-native";
+import { DataStore, Auth } from "aws-amplify";
 import { User } from "../../src/models";
-import Auth from "@aws-amplify/auth";
+import { S3Image } from "aws-amplify-react-native";
 
 const green = "rgb(0,195,0)";
 const orange = "rgb(247,152,98)";
 
-const myID = "u1";
-
 const Message = ({ message }) => {
   const [user, setUser] = useState<User | undefined>();
   const [isMe, setIsMe] = useState<boolean>(false);
+
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     DataStore.query(User, message.userID).then(setUser);
@@ -39,7 +45,16 @@ const Message = ({ message }) => {
         isMe ? styles.rightContainer : styles.leftContainer,
       ]}
     >
-      <Text style={styles.text}>{message.content}</Text>
+      {message.image && (
+        <View style={{ marginBottom: message.content ? 5 : 0 }}>
+          <S3Image
+            imgKey={message.image}
+            style={{ width: width * 0.5, aspectRatio: 4 / 3 }}
+            resizeMode="contain"
+          />
+        </View>
+      )}
+      {!!message.content && <Text style={styles.text}>{message.content}</Text>}
     </View>
   );
 };
