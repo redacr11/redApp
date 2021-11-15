@@ -6,9 +6,10 @@ import {
   ActivityIndicator,
   useWindowDimensions,
 } from "react-native";
-import { DataStore, Auth } from "aws-amplify";
+import { DataStore, Auth, Storage } from "aws-amplify";
 import { User } from "../../src/models";
 import { S3Image } from "aws-amplify-react-native";
+import AudioPlayer from "../AudioPlayer";
 
 const green = "rgb(0,195,0)";
 const orange = "rgb(247,152,98)";
@@ -16,12 +17,19 @@ const orange = "rgb(247,152,98)";
 const Message = ({ message }) => {
   const [user, setUser] = useState<User | undefined>();
   const [isMe, setIsMe] = useState<boolean>(false);
+  const [soundURI, setSoundURI] = useState<any>(null);
 
   const { width } = useWindowDimensions();
 
   useEffect(() => {
     DataStore.query(User, message.userID).then(setUser);
   }, []);
+
+  useEffect(() => {
+    if (message.audio) {
+      Storage.get(message.audio).then(setSoundURI);
+    }
+  }, [message]);
 
   useEffect(() => {
     const checkIfMe = async () => {
@@ -43,6 +51,7 @@ const Message = ({ message }) => {
       style={[
         styles.container,
         isMe ? styles.rightContainer : styles.leftContainer,
+        { width: soundURI ? "60%" : "auto" },
       ]}
     >
       {message.image && (
@@ -54,6 +63,7 @@ const Message = ({ message }) => {
           />
         </View>
       )}
+      {soundURI && <AudioPlayer soundURI={soundURI} />}
       {!!message.content && <Text style={styles.text}>{message.content}</Text>}
     </View>
   );
