@@ -3,6 +3,7 @@ import { View, Image, Text, useWindowDimensions } from "react-native";
 import { Entypo, Feather } from "@expo/vector-icons";
 import { DataStore, Auth } from "aws-amplify";
 import { ChatRoomUser, User } from "../src/models";
+import moment from "moment";
 
 const ChatRoomHeader = ({ id, children }) => {
   const { width } = useWindowDimensions();
@@ -27,6 +28,20 @@ const ChatRoomHeader = ({ id, children }) => {
     fetchUsers();
   }, []);
 
+  const getLastOnlineText = () => {
+    if (!user?.lastOnlineAt) {
+      return null;
+    }
+
+    const lastOnlineDiffMS = moment().diff(moment(user.lastOnlineAt));
+    if (lastOnlineDiffMS < 0.25 * 60 * 1000) {
+      //! lastOnlineDiffMS < MINUTES * CONVERT_TO_SECONDS * CONVERT_TO_MILLISECONDS
+      return "online";
+    } else {
+      return `Last online: ${moment(user.lastOnlineAt).fromNow()}`;
+    }
+  };
+
   return (
     <View
       style={{
@@ -46,15 +61,16 @@ const ChatRoomHeader = ({ id, children }) => {
         }}
         style={{ width: 30, height: 30, borderRadius: 30 }}
       />
-      <Text
-        style={{
-          flex: 1,
-          marginLeft: 10,
-          fontWeight: "bold",
-        }}
-      >
-        {user?.name}
-      </Text>
+      <View style={{ flex: 1, marginLeft: 10 }}>
+        <Text
+          style={{
+            fontWeight: "bold",
+          }}
+        >
+          {user?.name}
+        </Text>
+        <Text>{getLastOnlineText()}</Text>
+      </View>
       <Entypo
         name="camera"
         size={22}
