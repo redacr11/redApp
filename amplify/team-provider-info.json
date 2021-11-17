@@ -9,7 +9,8 @@
       "UnauthRoleName": "amplify-redapp-staging-110037-unauthRole",
       "StackName": "amplify-redapp-staging-110037",
       "StackId": "arn:aws:cloudformation:us-east-1:579984695306:stack/amplify-redapp-staging-110037/453b5900-414c-11ec-92d0-0ac444f76f3b",
-      "AmplifyAppId": "dnjx8q0iw9qwi"
+      "AmplifyAppId": "dnjx8q0iw9qwi",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-redapp-staging-110037-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {

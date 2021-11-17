@@ -1,9 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Amplify, { Auth } from "aws-amplify";
+import Amplify, { Hub, DataStore } from "aws-amplify";
 import { withAuthenticator } from "aws-amplify-react-native";
 import config from "./src/aws-exports";
+import { Message } from "./src/models";
 
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
@@ -14,6 +15,27 @@ Amplify.configure(config);
 function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
+
+  useEffect(() => {
+    const listener = Hub.listen("datastore", async (hubData) => {
+      const { event, data } = hubData.payload;
+
+      if (
+        event === "outboxMutationProcessed" &&
+        data.model === Message &&
+        !["DELIVERED", "READ"].includes(data.element.status)
+      ) {
+        // set the message status to delivered
+        DataStore.save(
+          Message.copyOf(data.element, (updated) => {
+            updated.status = "DELIVERED";
+          })
+        );
+      }
+    });
+
+    return () => listener();
+  }, []);
 
   if (!isLoadingComplete) {
     return null;
