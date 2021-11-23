@@ -55,7 +55,7 @@ export default function UsersScreen() {
     const dbUser = await DataStore.query(User, authUser.attributes.sub);
 
     // Create a chatroom with the person
-    const newChatRoomData = { newMessages: 0, admin: dbUser };
+    const newChatRoomData = { newMessages: 0, Admin: dbUser };
     if (users.length > 1) {
       newChatRoomData.name = "New Group";
       newChatRoomData.imageUri =

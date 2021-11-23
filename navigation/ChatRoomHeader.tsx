@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { View, Image, Text, useWindowDimensions } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  useWindowDimensions,
+  Pressable,
+} from "react-native";
 import { Entypo, Feather } from "@expo/vector-icons";
 import { DataStore, Auth } from "aws-amplify";
 import { ChatRoom, ChatRoomUser, User } from "../src/models";
 import moment from "moment";
+import { useNavigation } from "@react-navigation/core";
 
 const ChatRoomHeader = ({ id, children }) => {
   const { width } = useWindowDimensions();
   const [user, setUser] = useState<User | null>(null);
   const [chatRoom, setChatRoom] = useState<ChatRoom | undefined>(null);
   const [allUsers, setAllUsers] = useState<User[]>([]);
+
+  const navigation = useNavigation();
 
   const fetchUsers = async () => {
     const fetchedUsers = (await DataStore.query(ChatRoomUser))
@@ -54,6 +63,10 @@ const ChatRoomHeader = ({ id, children }) => {
     return allUsers.map((user) => user.name).join(", ");
   };
 
+  const openInfo = () => {
+    navigation.navigate("GroupInfoScreen", { id });
+  };
+
   const isGroup = allUsers.length > 2;
 
   return (
@@ -62,11 +75,12 @@ const ChatRoomHeader = ({ id, children }) => {
         flexDirection: "row",
         justifyContent: "space-between",
         backgroundColor: "lightblue",
-        position: "absolute",
         width: width - width / 20,
-        left: width - width * 1.45,
+        position: "relative",
+        left: -10,
         padding: 10,
         alignItems: "center",
+        overflow: "hidden",
       }}
     >
       <Image
@@ -75,7 +89,7 @@ const ChatRoomHeader = ({ id, children }) => {
         }}
         style={{ width: 30, height: 30, borderRadius: 30 }}
       />
-      <View style={{ flex: 1, marginLeft: 10 }}>
+      <Pressable onPress={openInfo} style={{ flex: 1, marginLeft: 10 }}>
         <Text
           style={{
             fontWeight: "bold",
@@ -86,7 +100,7 @@ const ChatRoomHeader = ({ id, children }) => {
         <Text numberOfLines={1}>
           {isGroup ? getUsernames() : getLastOnlineText()}
         </Text>
-      </View>
+      </Pressable>
       <Entypo
         name="camera"
         size={22}
